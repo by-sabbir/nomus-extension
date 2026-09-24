@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>nomus</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>nomus <span id="pill" class="pill">idle</span></h1>
+    <div class="sub" id="tabTitle">—</div>
+
+    <div class="card">
+      <div class="row">
+        <button id="start" class="primary">Filter this tab</button>
+        <button id="stop" disabled>Stop</button>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="label">Mode</span>
+        <span class="seg">
+          <button data-mode="2" id="modeV1" title="trained nomus-v1 voice mask">nomus-v1</button>
+          <button data-mode="1" id="modeOn" title="RNNoise baseline">rnnoise</button>
+          <button data-mode="0" id="modeOff">Bypass</button>
+        </span>
+      </div>
+      <div class="row">
+        <span class="label">Strength</span>
+        <input type="range" id="strength" min="0" max="100" value="100" />
+        <span class="val" id="strengthVal">100%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="label" id="voiceLabel">Voice</span>
+        <div class="meter"><i id="voiceBar"></i></div>
+        <span class="val" id="voiceVal">–</span>
+      </div>
+      <div class="row" title="Share of the real-time audio budget the engine uses, measured by Benchmark (the audio thread has no precise clock).">
+        <span class="label">CPU</span>
+        <div class="meter load"><i id="loadBar"></i></div>
+        <span class="val" id="loadVal">–</span>
+      </div>
+      <div class="row hidden" id="blockRow">
+        <span class="label">Block</span>
+        <span class="val auto" id="blockVal">–</span>
+      </div>
+      <div class="row">
+        <span class="label">Latency</span>
+        <span class="val auto" id="latencyVal">–</span>
+      </div>
+      <div class="row">
+        <span class="label">Engine</span>
+        <span class="val auto" id="engineVal">rnnoise · wasm</span>
+      </div>
+      <div class="row">
+        <span class="label">Cost</span>
+        <span class="status grow" id="benchVal">not measured</span>
+        <button id="bench">Measure</button>
+      </div>
+    </div>
+
+    <script src="bench.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

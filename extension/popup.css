@@ -1,0 +1,173 @@
+/* nomus popup. Kept in its own file because the extension's content security
+   policy (manifest.json) forbids inline <style> and style="" attributes. */
+:root {
+  color-scheme: light dark;
+  --fg: #1a1a1a;
+  --muted: #6b6b6b;
+  --bg: #fafafa;
+  --card: #ffffff;
+  --line: #e3e3e3;
+  --accent: #2f6fed;
+  --ok: #1f9d55;
+  --warn: #d97706;
+  --err: #dc2626;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #ececec;
+    --muted: #9a9a9a;
+    --bg: #161616;
+    --card: #1f1f1f;
+    --line: #2e2e2e;
+    --accent: #6b9cff;
+  }
+}
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+body {
+  width: 340px;
+  padding: 14px;
+  box-sizing: border-box;
+}
+h1 {
+  font-size: 15px;
+  margin: 0 0 2px;
+  letter-spacing: 0.2px;
+}
+.sub {
+  color: var(--muted);
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 6px 0;
+}
+button {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.seg {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.seg button {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 6px 4px;
+  white-space: nowrap;
+}
+.seg button + button {
+  border-left: 1px solid var(--line);
+}
+.seg button:disabled {
+  opacity: 0.4;
+}
+.seg button.on {
+  background: var(--accent);
+  color: #fff;
+}
+input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+.meter {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+  flex: 1;
+}
+.meter > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--ok);
+  transition: width 120ms linear;
+}
+.meter.load > i {
+  background: var(--accent);
+}
+.label {
+  color: var(--muted);
+  width: 64px;
+  flex-shrink: 0;
+}
+.val {
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
+  text-align: right;
+  white-space: nowrap;
+}
+.hidden {
+  display: none !important;
+}
+.status {
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 16px;
+}
+.status.err {
+  color: var(--err);
+}
+.status.warn {
+  color: var(--warn);
+}
+.pill {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.pill.on {
+  color: var(--ok);
+  border-color: var(--ok);
+}
+.val.auto {
+  min-width: 0;
+}
+.status.grow {
+  flex: 1;
+  min-height: 0;
+}
