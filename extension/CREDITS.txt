@@ -1,0 +1,21 @@
+nomus: credits and licences
+===========================
+
+Model weights (pkg/model.nmv)
+  Trained by the nomus project on the datasets below. Because the training data
+  includes GTSinger, the weights are distributed under the Creative Commons
+  Attribution-NonCommercial-ShareAlike 4.0 licence (CC BY-NC-SA 4.0):
+  https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Training data
+  GTSinger: a global multi-technique singing corpus. Zhang et al., 2024.
+    https://huggingface.co/datasets/GTSinger/GTSinger (CC BY-NC-SA 4.0).
+    A subset of 17 singers' phrases was converted to 16-bit mono FLAC for training.
+  MUSDB18: Rafii et al., 2017. https://sigsep.github.io/datasets/musdb.html (research use).
+  LibriSpeech: Panayotov et al., 2015. https://www.openslr.org/12 (CC BY 4.0).
+  Free Music Archive: Defferrard et al., 2017. https://github.com/mdeff/fma (per-track Creative Commons licences).
+
+Code
+  The nomus engine (pkg/nomus_wasm.wasm) and extension scripts are written by the
+  nomus project. The RNNoise baseline is nnnoiseless, a Rust port of Xiph.Org's
+  RNNoise (BSD 3-Clause licence).

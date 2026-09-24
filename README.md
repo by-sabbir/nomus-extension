@@ -69,12 +69,13 @@ docs/                 logo and images
 The engine (Rust) and the model training pipeline are not open source. This repository ships their compiled
 output so the extension runs as-is:
 
-| File | What it is | SHA-256 |
-| --- | --- | --- |
-| `nomus_wasm.wasm` | Compiled audio engine, WebAssembly with SIMD and zero imports | `abf2c6e4b87ab13d8ff03917b58b3f124deddef776ce9ccf9af4147ec23c3c19` |
-| `model.nmv` | Trained voice-mask weights | `49a64f96dffd3dc487fc43cf881fba09aab3b9360a961f2bcf3ba7b2f83533ce` |
+| File | What it is | Licence | SHA-256 |
+| --- | --- | --- | --- |
+| `nomus_wasm.wasm` | Compiled audio engine, WebAssembly with SIMD and zero imports | Proprietary, see [LICENSE](LICENSE) | `abf2c6e4b87ab13d8ff03917b58b3f124deddef776ce9ccf9af4147ec23c3c19` |
+| `model.nmv` | Trained voice-mask weights (vocal6) | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | `9d954003b1516a09eda6012c20c2e68c902fbc9a497b031e189872e768531465` |
 
-These files are not covered by the MIT licence. See [LICENSE](LICENSE).
+The model is trained partly on GTSinger, which is licensed CC BY-NC-SA 4.0, so the weights carry the same licence.
+Dataset credits are in [extension/CREDITS.txt](extension/CREDITS.txt).
 
 ## Develop
 
@@ -116,4 +117,6 @@ capture step itself can't be tested automatically.
 
 ## License
 
-The extension source is under the [MIT licence](LICENSE), except for `extension/pkg/`, which is proprietary.
+The extension source is under the [MIT licence](LICENSE). In `extension/pkg/`, the compiled engine `nomus_wasm.wasm` is
+proprietary and the model weights `model.nmv` are under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+See [LICENSE](LICENSE) and [extension/CREDITS.txt](extension/CREDITS.txt).

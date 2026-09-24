@@ -22,11 +22,19 @@ SOFTWARE.
 
 -------------------------------------------------------------------------------
 
-Exception: extension/pkg/
+Exceptions: extension/pkg/
 
-The files in extension/pkg/ (nomus_wasm.wasm, the compiled audio engine, and
-model.nmv, the trained model weights) are NOT covered by the MIT License above.
-Copyright (c) 2026 by-sabbir. All rights reserved. They are provided solely so
+The files in extension/pkg/ are NOT covered by the MIT License above.
+
+extension/pkg/nomus_wasm.wasm, the compiled audio engine:
+Copyright (c) 2026 by-sabbir. All rights reserved. It is provided solely so
 that the nomus extension in this repository can be run and inspected. You may
-not extract, redistribute, modify, reverse engineer, or use them outside the
+not extract, redistribute, modify, reverse engineer, or use it outside the
 nomus extension without prior written permission.
+
+extension/pkg/model.nmv, the trained model weights:
+Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+International licence (CC BY-NC-SA 4.0),
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+The weights are trained partly on GTSinger (CC BY-NC-SA 4.0). Dataset credits:
+extension/CREDITS.txt.
