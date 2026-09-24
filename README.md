@@ -89,7 +89,7 @@ Chrome 116 or newer is required.
 **Tests** (Node 18 or newer):
 
 ```bash
-node --test extension/tests/
+node --test extension/tests/*.test.cjs
 ```
 
 **Package for the Web Store.** This builds a zip without the tests:
