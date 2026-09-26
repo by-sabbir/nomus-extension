@@ -59,9 +59,10 @@
     return eIn > 0 ? 10 * Math.log10(eOut / eIn) : 0;
   }
 
+  // ANCHOR: bench_engine
   /**
    * @param {WebAssembly.Module} module compiled nomus module
-   * @param {{seconds?: number, channels?: number}} opts
+   * @param {{seconds?: number, channels?: number, modelBytes?: ArrayBuffer}} opts
    */
   async function benchEngine(module, opts = {}) {
     const seconds = opts.seconds ?? 5;
@@ -150,6 +151,7 @@
       ),
     };
   }
+  // ANCHOR_END: bench_engine
 
   function formatBench(r) {
     const model = r.modelUsPerBlock == null ? "" : `nomus-v1: ${r.modelUsPerBlock.toFixed(1)} µs per block (${r.modelLoadPct.toFixed(2)}%). `;

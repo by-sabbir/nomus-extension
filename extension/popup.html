@@ -54,7 +54,7 @@
       </div>
       <div class="row">
         <span class="label">Engine</span>
-        <span class="val auto" id="engineVal">rnnoise · wasm</span>
+        <span class="val auto" id="engineVal">nomus-v1 · wasm</span>
       </div>
       <div class="row">
         <span class="label">Cost</span>
@@ -63,6 +63,17 @@
       </div>
     </div>
 
+    <div class="card rate hidden" id="rate">
+      <div class="row">
+        <span class="status grow">Is nomus useful? A rating in the Chrome Web Store helps other people find it.</span>
+        <button id="rateClose" class="close" title="Dismiss" aria-label="Dismiss">&times;</button>
+      </div>
+      <div class="row">
+        <button id="rateGo" class="primary">Rate nomus</button>
+      </div>
+    </div>
+
+    <script src="rate.js"></script>
     <script src="bench.js"></script>
     <script src="popup.js"></script>
   </body>

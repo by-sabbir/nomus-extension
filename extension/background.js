@@ -5,7 +5,20 @@
 // ("background" | "offscreen" | "popup"). Contexts ignore messages not
 // addressed to them so only one responder ever calls sendResponse.
 
+importScripts("rate.js");
+
 const OFFSCREEN_URL = "offscreen.html";
+
+// Local session count for the "Rate nomus" prompt (rate.js). Never blocks or
+// fails a start.
+async function countSession(res) {
+  if (!res || !res.ok) return;
+  try {
+    await nomusRate.recordSession(chrome.storage.local);
+  } catch (err) {
+    console.warn("session count failed", err);
+  }
+}
 
 // ANCHOR: offscreen
 async function hasOffscreenDocument() {
@@ -15,8 +28,10 @@ async function hasOffscreenDocument() {
   });
   return contexts.length > 0;
 }
+// ANCHOR_END: offscreen
 
 let creating = null;
+// ANCHOR: badge
 async function syncBadge() {
   // A completed start response may belong to an already cancelled attempt.
   // Read current state instead of allowing that old response to change the badge.
@@ -28,7 +43,9 @@ async function syncBadge() {
   await chrome.action.setBadgeText({ text: active ? "ON" : error ? "!" : "" });
   await chrome.action.setBadgeBackgroundColor({ color: error && !active ? "#dc2626" : "#1f9d55" });
 }
+// ANCHOR_END: badge
 
+// ANCHOR: ensure
 async function ensureOffscreenDocument() {
   if (await hasOffscreenDocument()) return;
   if (!creating) {
@@ -43,8 +60,8 @@ async function ensureOffscreenDocument() {
       });
   }
   await creating;
-// ANCHOR_END: offscreen
 }
+// ANCHOR_END: ensure
 
 // ANCHOR: command
 // Keyboard command (Cmd/Ctrl+Shift+Y): toggle filtering on the active tab.
@@ -57,7 +74,9 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     const running = (await hasOffscreenDocument())
       ? await chrome.runtime.sendMessage({ target: "offscreen", type: "get-state" })
       : { active: false };
-    if (running && (running.active || running.starting)) {
+    // Same tab: toggle off. Another tab: fall through and start here, which
+    // moves the filter (the popup and the support page promise the same).
+    if (running && (running.active || running.starting) && running.tabId === target.id) {
       await chrome.runtime.sendMessage({ target: "offscreen", type: "stop" });
       await syncBadge();
       return;
@@ -65,7 +84,7 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: target.id });
     const prefs = await chrome.storage.local.get(["mode", "strength"]);
     await ensureOffscreenDocument();
-    await chrome.runtime.sendMessage({
+    const res = await chrome.runtime.sendMessage({
       target: "offscreen",
       type: "start",
       streamId,
@@ -73,14 +92,16 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
       mode: typeof prefs.mode === "number" ? prefs.mode : 2,
       strength: typeof prefs.strength === "number" ? prefs.strength : 1,
     });
+    await countSession(res);
     await syncBadge();
   } catch (err) {
     console.error("toggle-filter failed", err);
     chrome.action.setBadgeText({ text: "!" });
-// ANCHOR_END: command
   }
 });
+// ANCHOR_END: command
 
+// ANCHOR: router
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (!msg || msg.target !== "background") return false;
   (async () => {
@@ -96,6 +117,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
             mode: msg.mode,
             strength: msg.strength,
           });
+          await countSession(res);
           await syncBadge();
           sendResponse(res ?? { ok: false, error: "offscreen did not respond" });
           break;
@@ -108,6 +130,12 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
           } else {
             sendResponse({ ok: true, note: "not running" });
           }
+          break;
+        }
+        case "sync-badge": {
+          // Sent by the offscreen document when capture ends on its own.
+          await syncBadge();
+          sendResponse({ ok: true });
           break;
         }
         case "state": {
@@ -128,3 +156,4 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   })();
   return true; // async response
 });
+// ANCHOR_END: router

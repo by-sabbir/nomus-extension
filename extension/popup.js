@@ -45,6 +45,7 @@ function renderMode(mode) {
   els.modeOff.classList.toggle("on", mode === 0);
 }
 
+// ANCHOR: render_state
 function renderState(s) {
   const active = !!(s && s.active);
   els.pill.textContent = active ? (s.tabId === currentTab?.id ? "filtering this tab" : `filtering tab ${s.tabId}`) : "idle";
@@ -99,6 +100,7 @@ function renderState(s) {
       ? `${s.latencyMs.toFixed(0)} ms total (engine ${s.engineLatencyMs.toFixed(0)} ms)`
       : "–";
 }
+// ANCHOR_END: render_state
 
 // CPU share for the active mode, from the last main-thread benchmark.
 function renderCpu(mode) {
@@ -133,18 +135,21 @@ async function start() {
     const res = await bg({ type: "start", streamId, tabId: currentTab.id, mode: prefs.mode, strength: prefs.strength });
     if (!res || !res.ok) throw new Error((res && res.error) || "start failed");
     renderState(res);
+    maybeShowRate();
   } catch (err) {
     setStatus(String(err && err.message ? err.message : err), "err");
     els.start.disabled = false;
-// ANCHOR_END: start
   }
 }
+// ANCHOR_END: start
 
+// ANCHOR: stop
 async function stop() {
   els.stop.disabled = true;
   await bg({ type: "stop" });
   await refresh();
 }
+// ANCHOR_END: stop
 
 els.start.addEventListener("click", start);
 $("bench").addEventListener("click", async () => {
@@ -179,6 +184,27 @@ els.strength.addEventListener("input", () => {
   offscreen({ type: "set-strength", strength: v });
 });
 
+// ANCHOR: rate
+// Local-only "Rate nomus" prompt (rate.js): shown after the tenth started
+// session, hidden for good once clicked or dismissed.
+async function maybeShowRate() {
+  try {
+    $("rate").classList.toggle("hidden", !(await window.nomusRate.shouldPrompt(chrome.storage.local)));
+  } catch {
+    // Storage unavailable: no prompt.
+  }
+}
+
+async function closeRate(open) {
+  $("rate").classList.add("hidden");
+  await window.nomusRate.markDone(chrome.storage.local);
+  if (open) chrome.tabs.create({ url: window.nomusRate.REVIEWS_URL });
+}
+
+$("rateGo").addEventListener("click", () => closeRate(true));
+$("rateClose").addEventListener("click", () => closeRate(false));
+// ANCHOR_END: rate
+
 function setMode(mode) {
   prefs.mode = mode;
   renderMode(mode);
@@ -202,5 +228,6 @@ function setMode(mode) {
     els.start.disabled = true;
   }
   await refresh();
+  maybeShowRate();
   setInterval(refresh, 300);
 })();

@@ -2,6 +2,8 @@ nomus: credits and licences
 ===========================
 
 Model weights (pkg/model.nmv)
+  vocal8 (extension 0.4.0), sha256
+  d649b6b26f70df1a94cddbe0e8190e2ae72475b97b05dcebfe5df81285d4162d.
   Trained by the nomus project on the datasets below. Because the training data
   includes GTSinger, the weights are distributed under the Creative Commons
   Attribution-NonCommercial-ShareAlike 4.0 licence (CC BY-NC-SA 4.0):
@@ -14,6 +16,10 @@ Training data
   MUSDB18: Rafii et al., 2017. https://sigsep.github.io/datasets/musdb.html (research use).
   LibriSpeech: Panayotov et al., 2015. https://www.openslr.org/12 (CC BY 4.0).
   Free Music Archive: Defferrard et al., 2017. https://github.com/mdeff/fma (per-track Creative Commons licences).
+  Medley-solos-DB: Lostanlen and Cella, 2016. https://zenodo.org/records/3464194 (CC BY 4.0).
+    Solo-instrument clips (clarinet, distorted guitar, flute, piano, tenor saxophone, trumpet,
+    violin) used as music-only training examples; the singer class was not used.
+  Room reverberation in training is synthetic (generated in code); no impulse-response dataset is used.
 
 Code
   The nomus engine (pkg/nomus_wasm.wasm) and extension scripts are written by the

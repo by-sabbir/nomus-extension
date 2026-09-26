@@ -11,9 +11,9 @@
 
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/enmkngmoakghoclllgkmoehngicaoafn?utm_source=website">Chrome Web Store</a> ·
-  <a href="https://nomus.agrohi.com">Website</a> ·
-  <a href="https://nomus.agrohi.com/demo/">Try the demo</a> ·
-  <a href="https://nomus.agrohi.com/privacy/">Privacy</a>
+  <a href="https://agrohi.com/nomus/">Website</a> ·
+  <a href="https://agrohi.com/nomus/demo/">Try the demo</a> ·
+  <a href="https://agrohi.com/nomus/privacy/">Privacy</a>
 </p>
 
 <p align="center">
@@ -60,7 +60,7 @@ extension/            the unpacked extension, identical to the Web Store build
   popup.*             the popup UI
   bench.js            main-thread engine benchmark (the audio thread has no precise clock)
   pkg/                compiled engine and model weights (see below)
-  tests/              node:test tests for the offscreen capture lifecycle
+  tests/              node:test tests (offscreen capture lifecycle, rate prompt)
 docs/                 logo and images
 ```
 
@@ -72,7 +72,7 @@ output so the extension runs as-is:
 | File | What it is | Licence | SHA-256 |
 | --- | --- | --- | --- |
 | `nomus_wasm.wasm` | Compiled audio engine, WebAssembly with SIMD and zero imports | Proprietary, see [LICENSE](LICENSE) | `abf2c6e4b87ab13d8ff03917b58b3f124deddef776ce9ccf9af4147ec23c3c19` |
-| `model.nmv` | Trained voice-mask weights (vocal6) | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | `9d954003b1516a09eda6012c20c2e68c902fbc9a497b031e189872e768531465` |
+| `model.nmv` | Trained voice-mask weights (vocal8) | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | `d649b6b26f70df1a94cddbe0e8190e2ae72475b97b05dcebfe5df81285d4162d` |
 
 The model is trained partly on GTSinger, which is licensed CC BY-NC-SA 4.0, so the weights carry the same licence.
 Dataset credits are in [extension/CREDITS.txt](extension/CREDITS.txt).
@@ -104,7 +104,8 @@ capture step itself can't be tested automatically.
 
 ## Limitations
 
-- **Platform:** Chrome on a computer only. There's no mobile version yet.
+- **Platform:** this extension runs in Chrome on a computer. Apps for macOS, Linux and Android are on the
+  [download page](https://agrohi.com/nomus/download/).
 - **What can be filtered:** only the active tab, and never browser pages such as `chrome://`.
 - **Very loud music:** when the music is much louder than the voice, some of it comes through.
 - **Voice-like instruments:** instruments that sound like a voice, such as a solo violin, can pass.
@@ -112,7 +113,7 @@ capture step itself can't be tested automatically.
 ## Support
 
 - **Questions and bugs:** [open an issue](https://github.com/by-sabbir/nomus-extension/issues), write to
-  [support@agrohi.com](mailto:support@agrohi.com), or see the [support page](https://nomus.agrohi.com/support/).
+  [support@agrohi.com](mailto:support@agrohi.com), or see the [support page](https://agrohi.com/nomus/support/).
 - **Reviews:** leave one on the [Chrome Web Store](https://chromewebstore.google.com/detail/enmkngmoakghoclllgkmoehngicaoafn?utm_source=website).
 
 ## License

@@ -19,6 +19,7 @@ const now =
 const timerIsCoarse = !(typeof performance !== "undefined" && typeof performance.now === "function");
 
 class NomusProcessor extends AudioWorkletProcessor {
+  // ANCHOR: constructor
   constructor(options) {
     super();
     this.channels = Math.max(1, Math.min(8, options?.processorOptions?.channels ?? 2));
@@ -38,6 +39,7 @@ class NomusProcessor extends AudioWorkletProcessor {
     if (po.module) this.init(po.module);
     else if (po.bytes) this.initFromBytes(po.bytes);
   }
+  // ANCHOR_END: constructor
 
   // Copy an NMV1 blob into wasm memory and hand it to the engine.
   loadModel(bytes) {
@@ -68,6 +70,7 @@ class NomusProcessor extends AudioWorkletProcessor {
     }
   }
 
+  // ANCHOR: on_message
   onMessage(msg) {
     switch (msg?.type) {
       case "init":
@@ -80,10 +83,14 @@ class NomusProcessor extends AudioWorkletProcessor {
         this.mode = msg.mode | 0;
         if (this.ready) this.exports.nomus_set_mode(this.engine, this.mode);
         break;
-      case "set-strength":
-        this.strength = Math.max(0, Math.min(1, Number(msg.strength)));
+      case "set-strength": {
+        // NaN would pass through the clamps (and Rust's f32::clamp) into the mix.
+        const strength = Number(msg.strength);
+        if (!Number.isFinite(strength)) break;
+        this.strength = Math.max(0, Math.min(1, strength));
         if (this.ready) this.exports.nomus_set_strength(this.engine, this.strength);
         break;
+      }
       case "reset":
         if (this.ready) this.exports.nomus_reset(this.engine);
         break;
@@ -104,8 +111,9 @@ class NomusProcessor extends AudioWorkletProcessor {
         break;
     }
   }
+  // ANCHOR_END: on_message
 
-// ANCHOR: init
+  // ANCHOR: init
   init(module) {
     try {
       const instance = new WebAssembly.Instance(module, {});
@@ -148,11 +156,11 @@ class NomusProcessor extends AudioWorkletProcessor {
       });
     } catch (err) {
       this.port.postMessage({ type: "error", error: String(err && err.message ? err.message : err) });
-// ANCHOR_END: init
     }
   }
+  // ANCHOR_END: init
 
-// ANCHOR: refresh
+  // ANCHOR: refresh
   // WebAssembly.Memory may grow (detaching old views); re-create on change.
   refreshViews() {
     const buf = this.exports.memory.buffer;
@@ -160,11 +168,11 @@ class NomusProcessor extends AudioWorkletProcessor {
       this.memBuf = buf;
       this.inView = new Float32Array(buf, this.inPtr, BLOCK);
       this.outView = new Float32Array(buf, this.outPtr, BLOCK);
-// ANCHOR_END: refresh
     }
   }
+  // ANCHOR_END: refresh
 
-// ANCHOR: guard
+  // ANCHOR: guard
   // An uncaught exception in process() would permanently silence the node,
   // so the real work is wrapped and falls back to passthrough on error.
   process(inputs, outputs) {
@@ -183,11 +191,11 @@ class NomusProcessor extends AudioWorkletProcessor {
         for (let c = 0; c < output.length; c++) output[c].set(input[Math.min(c, input.length - 1)]);
       }
       return true;
-// ANCHOR_END: guard
     }
   }
+  // ANCHOR_END: guard
 
-// ANCHOR: render
+  // ANCHOR: render
   render(inputs, outputs) {
     const input = inputs[0];
     const output = outputs[0];
@@ -226,8 +234,8 @@ class NomusProcessor extends AudioWorkletProcessor {
       }
     }
     const dt = now() - t0;
-// ANCHOR_END: render
 
+    // ANCHOR: stats
     const s = this.stats;
     s.blocks++;
     s.busyMs += dt;
@@ -256,8 +264,10 @@ class NomusProcessor extends AudioWorkletProcessor {
       s.underruns = 0;
       s.since = now();
     }
+    // ANCHOR_END: stats
     return true;
   }
+  // ANCHOR_END: render
 }
 
 registerProcessor("nomus-processor", NomusProcessor);

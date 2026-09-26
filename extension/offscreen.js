@@ -25,6 +25,7 @@ let generation = 0;
 let modulePromise = null;
 let modelPromise = null;
 
+// ANCHOR: loaders
 // Optional trained weights shipped inside the extension. Missing file = no
 // voice-mask mode (rnnoise still works).
 function loadModelBytes() {
@@ -48,6 +49,7 @@ function loadModule() {
   }
   return modulePromise;
 }
+// ANCHOR_END: loaders
 
 // Each attempt owns its resources. Cancellation invalidates the attempt even
 // when getUserMedia/addModule/resume has not settled yet.
@@ -55,6 +57,7 @@ function checkCurrent(s) {
   if (session !== s || s.generation !== generation) throw new Error("capture start cancelled");
 }
 
+// ANCHOR: dispose
 async function dispose(s) {
   if (!s) return;
   if (s.cancelReady) s.cancelReady();
@@ -78,6 +81,7 @@ async function dispose(s) {
   s.ctx = null;
   if (ctx) { try { await ctx.close(); } catch (_) {} }
 }
+// ANCHOR_END: dispose
 
 function clearCaptureState() {
   state.active = false;
@@ -111,7 +115,12 @@ async function start(streamId, tabId, mode, strength) {
     checkCurrent(s);
     const track = s.stream.getAudioTracks()[0];
     if (track) {
-      track.onended = () => { if (session === s) stop(); };
+      track.onended = () => {
+        if (session !== s) return;
+        // The tab closed or navigated away: stop, then let the service worker
+        // clear its "ON" badge (it only resyncs after its own actions).
+        stop().then(() => chrome.runtime.sendMessage({ target: "background", type: "sync-badge" }).catch(() => {}));
+      };
       if (track.readyState === "ended") throw new Error("capture track ended during startup");
     }
     s.ctx = new AudioContext({ sampleRate: ENGINE_RATE, latencyHint: "interactive" });
@@ -173,9 +182,10 @@ async function start(streamId, tabId, mode, strength) {
     await dispose(s);
     return { ok: false, error };
   }
-// ANCHOR_END: start
 }
+// ANCHOR_END: start
 
+// ANCHOR: stop
 async function stop() {
   ++generation;
   const previous = session;
@@ -184,11 +194,13 @@ async function stop() {
   await dispose(previous);
   return snapshot();
 }
+// ANCHOR_END: stop
 
 function snapshot() {
   return { ok: true, ...state };
 }
 
+// ANCHOR: router
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (!msg || msg.target !== "offscreen") return false;
   switch (msg.type) {
@@ -199,15 +211,22 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       stop().then((s) => sendResponse(s));
       return true;
     case "set-mode":
-      state.mode = msg.mode | 0;
-      if (session?.node) session.node.port.postMessage({ type: "set-mode", mode: state.mode });
+      // 0 bypass, 1 rnnoise, 2 voice mask; ignore anything else.
+      if ([0, 1, 2].includes(msg.mode)) {
+        state.mode = msg.mode;
+        if (session?.node) session.node.port.postMessage({ type: "set-mode", mode: state.mode });
+      }
       sendResponse(snapshot());
       return false;
-    case "set-strength":
-      state.strength = Math.max(0, Math.min(1, Number(msg.strength)));
-      if (session?.node) session.node.port.postMessage({ type: "set-strength", strength: state.strength });
+    case "set-strength": {
+      const strength = Number(msg.strength);
+      if (Number.isFinite(strength)) {
+        state.strength = Math.max(0, Math.min(1, strength));
+        if (session?.node) session.node.port.postMessage({ type: "set-strength", strength: state.strength });
+      }
       sendResponse(snapshot());
       return false;
+    }
     case "get-state":
       sendResponse(snapshot());
       return false;
@@ -215,3 +234,4 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       return false;
   }
 });
+// ANCHOR_END: router

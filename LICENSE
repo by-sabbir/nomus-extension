@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 by-sabbir
+Copyright (c) 2026 Agrohi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ Exceptions: extension/pkg/
 The files in extension/pkg/ are NOT covered by the MIT License above.
 
 extension/pkg/nomus_wasm.wasm, the compiled audio engine:
-Copyright (c) 2026 by-sabbir. All rights reserved. It is provided solely so
+Copyright (c) 2026 Agrohi. All rights reserved. It is provided solely so
 that the nomus extension in this repository can be run and inspected. You may
 not extract, redistribute, modify, reverse engineer, or use it outside the
 nomus extension without prior written permission.
