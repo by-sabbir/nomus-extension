@@ -71,8 +71,8 @@ output so the extension runs as-is:
 
 | File | What it is | Licence | SHA-256 |
 | --- | --- | --- | --- |
-| `nomus_wasm.wasm` | Compiled audio engine, WebAssembly with SIMD and zero imports | Proprietary, see [LICENSE](LICENSE) | `da30af73be9a794d80c9fac9ae95a61ef33b21749dd066c628d38ef57c337e3d` |
-| `model.nmv` | Trained voice-mask weights (vocal9, NMV3) | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | `4474e31ca7cf24201df9787a41397da435376b6070b90971e0b44659230d4e8f` |
+| `nomus_wasm.wasm` | Compiled audio engine, WebAssembly with SIMD and zero imports | Proprietary, see [LICENSE](LICENSE) | `9b8d4ea44a99319a451a9dd1ab5488828166f85bab5b2da072e3ee5f2c5b4cd9` |
+| `model.nmv` | Trained voice-mask weights (vocal10, NMV3) | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) | `f29750cee62fd098876f44749989725b18e32778a8d1e0ea928e1d28c6d01a0c` |
 
 The model is trained partly on GTSinger, which is licensed CC BY-NC-SA 4.0, so the weights carry the same licence.
 Dataset credits are in [extension/CREDITS.txt](extension/CREDITS.txt).

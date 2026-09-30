@@ -2,8 +2,8 @@ nomus: credits and licences
 ===========================
 
 Model weights (pkg/model.nmv)
-  vocal9 (extension 0.4.1), sha256
-  4474e31ca7cf24201df9787a41397da435376b6070b90971e0b44659230d4e8f.
+  vocal10 (extension 0.4.2), sha256
+  f29750cee62fd098876f44749989725b18e32778a8d1e0ea928e1d28c6d01a0c.
   Trained by the nomus project on the datasets below. Because the training data
   includes GTSinger, the weights are distributed under the Creative Commons
   Attribution-NonCommercial-ShareAlike 4.0 licence (CC BY-NC-SA 4.0):
