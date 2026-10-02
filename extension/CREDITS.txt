@@ -2,8 +2,8 @@ nomus: credits and licences
 ===========================
 
 Model weights (pkg/model.nmv)
-  vocal10 (extension 0.4.2), sha256
-  f29750cee62fd098876f44749989725b18e32778a8d1e0ea928e1d28c6d01a0c.
+  vocal12 (extension 0.4.3), sha256
+  9d97a25bbd1d33d60af9bdf035c973f383b88156a48e346174451a49e8c3264f.
   Trained by the nomus project on the datasets below. Because the training data
   includes GTSinger, the weights are distributed under the Creative Commons
   Attribution-NonCommercial-ShareAlike 4.0 licence (CC BY-NC-SA 4.0):
@@ -21,6 +21,9 @@ Training data
     violin) used as music-only training examples; the singer class was not used.
   URMP: Li et al., 2019. https://zenodo.org/records/5034983 (CC0 1.0).
     Separately recorded solo stems of 13 orchestral instruments, used as music-only training examples.
+  GuitarSet: Xi et al., 2018. https://zenodo.org/records/3371780 (CC BY 4.0).
+    Microphone recordings of acoustic guitar (five of six guitarists), cut into 6 s clips and used as
+    music-only training examples.
   Room reverberation in training is synthetic (generated in code); no impulse-response dataset is used.
 
 Code

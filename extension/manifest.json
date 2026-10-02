@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "nomus: voice-preserving music filter",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Removes background music from any Chrome tab in real time and keeps voices, speech and singing. Free, on-device, no account.",
   "homepage_url": "https://agrohi.com/nomus/",
   "minimum_chrome_version": "116",
